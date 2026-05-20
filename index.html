@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Pelaporan Linen Binatu - RSUD SEKARWANGI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-teal-50 min-h-screen">
+    <div class="container mx-auto p-4 max-w-6xl">
+        <!-- Header -->
+        <div class="bg-white shadow-lg rounded-lg mb-6 p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-teal-700">📋 Aplikasi Pelaporan Linen Binatu</h1>
+                    <p class="text-gray-600 mt-2">RSUD SEKARWANGI</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500">Tanggal:</p>
+                    <p id="live-date" class="text-lg font-semibold text-teal-700"></p>
+                    <p class="text-sm text-gray-500 mt-2">Jam:</p>
+                    <p id="live-clock" class="text-xl font-bold text-teal-700"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="bg-white shadow-md rounded-t-lg mb-0">
+            <div class="flex flex-wrap border-b border-gray-200">
+                <button id="btn-input-linen" class="nav-btn bg-teal-50 text-teal-700 px-6 py-3 font-semibold border-b-2 border-teal-700 transition" onclick="switchTab('input-linen')">
+                    📥 Input Linen Kotor
+                </button>
+                <button id="btn-stok-linen" class="nav-btn px-6 py-3 font-semibold hover:bg-gray-50 transition" onclick="switchTab('stok-linen')">
+                    📦 Stok Linen
+                </button>
+                <button id="btn-laporan" class="nav-btn px-6 py-3 font-semibold hover:bg-gray-50 transition" onclick="switchTab('laporan')">
+                    📊 Laporan
+                </button>
+                <button id="btn-riwayat" class="nav-btn px-6 py-3 font-semibold hover:bg-gray-50 transition" onclick="switchTab('riwayat')">
+                    📝 Riwayat
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB 1: INPUT LINEN KOTOR -->
+        <div id="input-linen" class="tab-content active bg-white shadow-lg rounded-b-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Input Linen Kotor</h2>
+            <form id="form-linen-kotor" onsubmit="simpanLinenKotor(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Pilihan Ruangan -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-700">PILIH RUANGAN</label>
+                        <select id="kotor-ruangan" required class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                            <option value="">-- Pilih Ruangan --</option>
+                        </select>
+                    </div>
+                    <!-- Tanggal Input -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-700">TANGGAL PELAPORAN</label>
+                        <input type="date" id="kotor-tanggal" required class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Input Linen -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Jumlah Linen Kotor</h3>
+                    <div id="wrapper-item-linen" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
+
+                <!-- Catatan -->
+                <div class="mb-6">
+                    <label class="text-sm font-bold text-slate-700">CATATAN</label>
+                    <textarea id="kotor-catatan" rows="3" placeholder="Masukkan catatan jika ada..." class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-500 outline-none"></textarea>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex gap-3">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
+                        💾 Simpan
+                    </button>
+                    <button type="reset" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
+                        🔄 Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TAB 2: STOK LINEN -->
+        <div id="stok-linen" class="tab-content hidden bg-white shadow-lg rounded-b-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Manajemen Stok Linen</h2>
+            <form id="form-stok-linen" onsubmit="simpanStokLinen(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Jenis Linen -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-700">JENIS LINEN</label>
+                        <select id="stok-jenis" required class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                            <option value="">-- Pilih Jenis Linen --</option>
+                        </select>
+                    </div>
+                    <!-- Jumlah Stok -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-700">JUMLAH STOK</label>
+                        <input type="number" id="stok-jumlah" min="0" value="0" required class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex gap-3">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition">
+                        ✅ Tambah/Update Stok
+                    </button>
+                </div>
+            </form>
+
+            <!-- Tabel Stok -->
+            <div class="mt-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Daftar Stok Linen</h3>
+                <div class="overflow-x-auto">
+                    <table id="table-stok" class="w-full border-collapse border border-gray-300">
+                        <thead class="bg-teal-700 text-white">
+                            <tr>
+                                <th class="border border-gray-300 px-4 py-2 text-left">No</th>
+                                <th class="border border-gray-300 px-4 py-2 text-left">Jenis Linen</th>
+                                <th class="border border-gray-300 px-4 py-2 text-right">Stok</th>
+                                <th class="border border-gray-300 px-4 py-2 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-stok"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: LAPORAN -->
+        <div id="laporan" class="tab-content hidden bg-white shadow-lg rounded-b-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">📊 Laporan Linen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-lg p-4 shadow-md">
+                    <p class="text-sm font-semibold">Total Linen Kotor</p>
+                    <p id="total-kotor" class="text-3xl font-bold mt-2">0</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-400 to-green-600 text-white rounded-lg p-4 shadow-md">
+                    <p class="text-sm font-semibold">Total Stok Linen</p>
+                    <p id="total-stok" class="text-3xl font-bold mt-2">0</p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-400 to-orange-600 text-white rounded-lg p-4 shadow-md">
+                    <p class="text-sm font-semibold">Ruangan Aktif</p>
+                    <p id="ruangan-aktif" class="text-3xl font-bold mt-2">0</p>
+                </div>
+            </div>
+
+            <!-- Filter Laporan -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Filter Laporan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-sm font-bold text-slate-700">Dari Tanggal</label>
+                        <input type="date" id="filter-dari" class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-sm font-bold text-slate-700">Sampai Tanggal</label>
+                        <input type="date" id="filter-sampai" class="w-full bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm">
+                    </div>
+                    <div class="flex items-end gap-2">
+                        <button type="button" onclick="tampilkanLaporan()" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition flex-1">
+                            🔍 Filter
+                        </button>
+                        <button type="button" onclick="cetakLaporan()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition flex-1">
+                            🖨️ Cetak
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel Laporan -->
+            <div class="overflow-x-auto">
+                <table id="table-laporan" class="w-full border-collapse border border-gray-300">
+                    <thead class="bg-teal-700 text-white">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left">No</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Tanggal</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Ruangan</th>
+                            <th class="border border-gray-300 px-4 py-2 text-right">Total Linen</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-laporan"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB 4: RIWAYAT -->
+        <div id="riwayat" class="tab-content hidden bg-white shadow-lg rounded-b-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">📝 Riwayat Pelaporan</h2>
+            <div class="overflow-x-auto">
+                <table id="table-riwayat" class="w-full border-collapse border border-gray-300">
+                    <thead class="bg-teal-700 text-white">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left">No</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Tanggal</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Ruangan</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Jenis Linen</th>
+                            <th class="border border-gray-300 px-4 py-2 text-right">Jumlah</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-riwayat"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail -->
+    <div id="modal-detail" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-lg">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Detail Pelaporan</h3>
+            <div id="modal-content"></div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal()" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 rounded-lg transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
